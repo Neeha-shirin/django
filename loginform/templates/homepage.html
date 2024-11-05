@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #aecdf2;
+            display: flex;
+            flex-direction: column; /* Change to column to stack elements */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            background-color: #4293f5;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin: 0;
+        }
+        .logout-button {
+            margin-top: 20px; /* Add some space above the button */
+            padding: 10px 20px;
+            background-color: #035afc; /* Red background for logout */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .logout-button:hover {
+            background-color: #035afc; /* Darker red on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>welcome {{username}}!</h1>
+
+    <form action="{% url 'logout' %}" method="post"> <!-- Change 'logout' to your actual URL name -->
+        {% csrf_token %} <!-- Important for CSRF protection -->
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #b3e0ff; /* Pastel blue background */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px; /* Adjusted for a medium size */
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #0d47a1;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #1976d2;
+            border-bottom: 2px solid #bbdefb;
+            padding-bottom: 10px;
+            font-size: 1.8em;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #bbdefb;
+            text-align: left;
+        }
+
+        th {
+            background-color: #64b5f6;
+            color: #ffffff;
+        }
+
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #0d47a1;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #42a5f5;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1e88e5;
+        }
+
+        .delete-btn, .update-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background-color: #ef5350;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c62828;
+        }
+
+        .update-btn {
+            background-color: #66bb6a;
+            color: white;
+        }
+
+        .update-btn:hover {
+            background-color: #388e3c;
+        }
+
+        .logout-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #d32f2f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #c62828;
+        }
+
+        .no-users {
+            text-align: center;
+            color: #999;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            input[type="text"], input[type="email"], button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel</h1>
+
+        <h2>Add User</h2>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="name" placeholder="Enter username" required>
+                        <input type="email" name="email" placeholder="Enter email" required>
+                        <button type="submit">Add User</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <h2>Search User</h2>
+        <table>
+            <tr>
+                <td>
+                    <form method="GET" action="{% url 'adduser' %}">
+                        <input type="text" name="search" value="{{ search_query }}" placeholder="Search by username or email">
+                        <button type="submit">Search</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <h2>User List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ user.id }}">
+                            <button class="update-btn" type="submit" formaction="{% url 'updateuser' user.id %}">Update</button>
+                            <button class="delete-btn" type="submit" formaction="{% url 'deleteuser' user.id %}">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="no-users">No users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button class="logout-btn" onclick="location.href='{% url 'logout' %}'">Logout</button>
+    </div>
+</body>
+</html>
